@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("profesor") // "admin" | "profesor"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Archivo {
+  id              String   @id @default(cuid())
+  nombre          String
+  fechaCarga      DateTime @default(now())
+  totalRegistros  Int?
+  activo          Boolean  @default(true)
+  horarios        Horario[]
+  createdAt       DateTime @default(now())
+}
+
+model Horario {
+  id              String   @id @default(cuid())
+  periodo         String?
+  nrc             String
+  descripcionCurso String?
+  idInst          String?
+  instructor      String?
+  tipoReunion     String?
+  inicio          String?
+  fin             String?
+  horario         String?
+  edificio        String?
+  salon           String?
+  lun             String?
+  mar             String?
+  mie             String?
+  jue             String?
+  vie             String?
+  sab             String?
+  dom             String?
+  archivoId       String?
+  archivo         Archivo? @relation(fields: [archivoId], references: [id])
+  createdAt       DateTime @default(now())
+
+  @@index([nrc])
+  @@index([periodo])
+  @@index([edificio])
+}
